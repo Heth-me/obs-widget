@@ -1,8 +1,10 @@
 # Heth.me OBS widget
 
+[Public source and forks](https://github.com/Heth-me/obs-widget) · [Report an issue](https://github.com/Heth-me/obs-widget/issues)
+
 A transparent receiving QR and incoming-payment overlay for an OBS Studio **Browser source**. It does not control OBS scenes or streaming and needs no native plugin.
 
-The updated connection requires coordinated backend, Heth PWA and widget releases. It has not been accepted in production. User instructions live in [Heth documentation](https://docs.heth.me/user/obs); that guide explicitly marks the release status.
+The updated connection requires coordinated backend, Heth PWA and widget releases. It has not been accepted in production. The connection guide will be published in [Heth documentation](https://docs.heth.me/) with the service release. You can customize the widget now using preview mode; live alerts require the restricted backend API.
 
 ## Connect after release
 
@@ -30,7 +32,7 @@ Events are incoming charged transfers, not automatically author/platform donatio
 
 ## AI integration
 
-Remote Heth MCP provides `get_obs_widget`, `list_obs_events`, `prepare_obs_connection` and `update_obs_widget`, subject to consent/current account permissions. Ordinary appearance changes require AI-client approval; creating/revoking access requires Heth approval. The assistant gets a Heth review link and never receives the private Browser source URL. MCP does not connect to OBS WebSocket or control OBS itself. HTTP/OAuth release integration is tracked separately; the presence of these tools in source is not a public endpoint announcement.
+The planned remote Heth MCP integration includes `get_obs_widget`, `list_obs_events`, `prepare_obs_connection` and `update_obs_widget`, subject to consent/current account permissions. Ordinary appearance changes require AI-client approval; creating/revoking access requires Heth approval. The assistant gets a Heth review link and never receives the private Browser source URL. MCP does not connect to OBS WebSocket or control OBS itself. HTTP/OAuth release integration is tracked separately; the presence of these tools in source is not a public endpoint announcement.
 
 ## Verification limits
 
