@@ -8,7 +8,8 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "test": "node --test test/*.test.js"
+    "test": "node --test test/*.test.js",
+    "check:docs": "node scripts/check-docs.mjs"
   },
   "dependencies": {
     "qrcode.react": "^4.2.0",

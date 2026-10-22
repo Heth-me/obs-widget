@@ -1,46 +1,64 @@
 # Heth.me OBS widget
 
-[Public source and forks](https://github.com/Heth-me/obs-widget) · [Report an issue](https://github.com/Heth-me/obs-widget/issues)
+[Setup guide](https://docs.heth.me/user/obs) · [Руководство на русском](QUICKSTART_RU.md) · [Customize with AI](AI_GUIDE.md) · [Report an issue](https://github.com/Heth-me/obs-widget/issues)
 
-A transparent receiving QR and incoming-payment overlay for an OBS Studio **Browser source**. It does not control OBS scenes or streaming and needs no native plugin.
-
-See the [Heth OBS setup guide](https://docs.heth.me/user/obs) for connection and customization instructions. Use preview mode to design a layout without account credentials.
+Show a receiving QR and incoming Heth payment alerts on your stream. Add the widget as an OBS Studio **Browser source**. Its background is transparent; no native plugin is needed.
 
 ## Connect to Heth
 
-Open Heth → Settings → OBS Studio. Choose an available currency/network, appearance and language. Approve separate OBS access, copy its URL and paste it into an OBS Browser source (start at 900 × 500). Keep the URL private. Revoke access in Heth when finished.
+1. Open Heth → **Settings → OBS Studio**.
+2. Choose an available currency/network, caption, theme, optional suggested amount and language. Save the appearance.
+3. Approve and create the separate OBS connection, then copy its private URL.
+4. In OBS, add a **Browser** source, paste the URL and start with **900 × 500** pixels. Adjust the source to your scene.
+5. Scan the receiving QR and check the recipient, currency, network and suggested amount in Heth.
 
-Use only the `obs`-scoped access created by Heth. The old `api_key=` URL and general account keys are not supported. The secret is in the URL fragment `#token=...`, never in the displayed receiving QR. No token is needed for `?preview=1&lang=en`; its QR contains a non-payment preview string.
+Heth creates the restricted OBS key for you. You do not need a key from the business settings or a webhook server. The connection URL contains the OBS token after `#`; keep it private. The QR displayed to viewers contains receiving details, not the token. Revoke unused or exposed connections in Heth.
 
-## Local development
+## Change the appearance
+
+In Heth, you can change the caption, theme, available currency/network, optional suggested amount and RU/EN language. The connected widget refreshes its saved settings in about 30 seconds.
+
+For arbitrary layout, fonts, colors, animations or alert placement, fork this project and follow [customization](docs/CUSTOMIZATION.md), the [AI guide](AI_GUIDE.md) and [hosting instructions](docs/HOSTING.md). A custom build must be hosted; keeping a fork on GitHub does not serve the widget to OBS.
+
+## Develop and preview
+
+Use Node.js 24 and npm, matching the repository's CI configuration.
 
 ```sh
 npm ci
+npm run check:docs
 npm test
 npm run lint
 npm run build
 npm run dev
 ```
 
-The app is mounted at `/widget/donations`. Vite proxies `/api` to `https://app.heth.me` by default; an operator can set `OBS_API_TARGET` for an isolated fixture API. Do not use real account keys in examples or fixture logs. Production uses the existing same-origin nginx `/widget/` alias.
+Open [English preview](http://localhost:5174/widget/donations?preview=1&lang=en) or [Russian preview](http://localhost:5174/widget/donations?preview=1&lang=ru). Preview uses sample data without API requests or account credentials; its QR cannot open a payment. Use it to check layout at your intended OBS dimensions.
 
-## API and exact amounts
+Vite serves the app at `/widget/donations`. [Host your build](docs/HOSTING.md) to use it as your own OBS source.
 
-The restricted widget reads `/api/v1/obs/widget` and `/api/v1/obs/events`, with an explicit env. It does not request profiles or general transaction history. Receiving identity comes from the authenticated backend. Amounts are exact minor-unit strings plus stored decimals; missing decimals remain unknown. QR explicitly includes recipient, currency, network and environment.
+## Receiving and alerts
 
-Events are incoming charged transfers, not automatically author/platform donations. Read all cursor pages, deduplicate IDs and retain a bounded seen set. A bounded display queue applies back pressure to polling; up to three alerts remain visible for ten seconds. A fresh stream begins at the current second; a saved cursor can resume within 24 hours. This is not an immutable event log; verify final receipt in Heth history. Appearance refreshes within about 30 seconds. Revoked/unauthorized access stops polling.
+The receiving account comes from the authenticated Heth API. Changing the caption does not change the recipient. The restricted OBS connection can read its receiving identifier, appearance and incoming event feed; it cannot read balances/full history, change settings or send money.
 
-## AI integration
+The feed contains incoming transfers marked `charged`. It does not provide donor names or messages. A transfer is not automatically an attributed donation to a particular author or platform. Check receipt in Heth history.
 
-The remote [Heth MCP connection](https://docs.heth.me/ai/mcp) includes `get_obs_widget`, `list_obs_events`, `prepare_obs_connection` and `update_obs_widget`, subject to consent/current account permissions. Ordinary appearance changes require AI-client approval; creating/revoking access requires Heth approval. The assistant gets a Heth review link and never receives the private Browser source URL. MCP does not connect to OBS WebSocket or control OBS itself.
+The widget displays at most three alerts, each for ten seconds, and keeps a bounded queue. It follows cursor pages and deduplicates repeated events. A fresh source starts with new events; a saved cursor can resume within 24 hours. Revoked access stops polling.
 
-## Check a custom build
+Amounts arrive as exact integer strings with their recorded decimal precision. `formatMinorUnits` preserves every digit; if precision is unavailable, the amount remains unknown. Do not use floating-point conversion or relabel a token as another currency.
 
-Use preview mode with synthetic events to check layout, exact amounts and wrapping at your OBS source size. After connecting your own account, scan the receiving QR and check the recipient, currency and network in Heth. Verify incoming payments in Heth history.
+## Use Heth MCP
 
-## Custom layouts and AI assistance
+Connect your assistant through [Heth MCP](https://docs.heth.me/ai/mcp) and approve the needed OBS permissions in Heth.
 
-No source access is needed for the supported Heth appearance settings. For arbitrary layouts, modify and host a fork of this frontend. Start with [AI_GUIDE.md](AI_GUIDE.md), [AGENTS.md](AGENTS.md), [customization](docs/CUSTOMIZATION.md) and [custom hosting](docs/HOSTING.md). A coding assistant can work on preview data; it never needs your private OBS URL. The Heth MCP connection manages supported account settings and does not edit or deploy a fork.
+| Tool | What it does |
+| --- | --- |
+| `get_obs_widget` | Reads your receiving identifier and saved appearance; no OBS token is returned. |
+| `list_obs_events` | Reads the limited incoming event feed. |
+| `prepare_obs_connection` | Returns a Heth link to review proposed settings; it creates no access key. |
+| `update_obs_widget` | Changes caption, theme, suggested amount or language after confirmation in the AI client. |
+
+Choose currency/network and approve access in Heth. OBS access and MCP permissions are separate and are revoked separately. MCP handles account settings; a coding assistant with access to your fork handles arbitrary HTML/React/CSS changes. MCP does not edit a repository, deploy your custom build or control OBS scenes and streaming. A layout assistant does not need your private connection URL.
 
 ## Support
 

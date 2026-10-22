@@ -1,39 +1,44 @@
-# Working on the Heth OBS widget with an AI assistant
+# Work on the Heth OBS widget with an AI assistant
 
-This repository contains the browser overlay, not the wallet, payment backend or MCP server. A user can change its layout freely in a fork and host their own build. Ordinary Heth account settings can also be changed through Heth MCP; MCP does not edit this repository or deploy custom code.
+This repository is the browser overlay. Read [README.md](README.md), [AI_GUIDE.md](AI_GUIDE.md), [customization](docs/CUSTOMIZATION.md) and [hosting](docs/HOSTING.md) before changing it. Heth MCP manages supported account settings; arbitrary layouts are implemented in a fork by a coding assistant.
 
-## Start here
+## Start with preview
 
-1. Read README.md, AI_GUIDE.md and docs/CUSTOMIZATION.md.
-2. Install the locked dependencies with `npm ci`.
-3. Use `/widget/donations?preview=1&lang=en` (or `lang=ru`) for visual work. Preview uses a sample event and a **non-payment QR**. No account credential is necessary.
-4. After a change, run `npm test`, `npm run lint` and `npm run build`. Inspect the resulting screen at the intended OBS source size.
+Use the locked dependencies, Node.js 24 and the commands in README.md. Use `/widget/donations?preview=1&lang=en` or `lang=ru` for visual work. Preview uses sample data, makes no account API requests and displays a non-payment QR. Never request account credentials for layout work.
 
-## File ownership and design changes
+After changes, run `npm run check:docs`, `npm test`, `npm run lint` and `npm run build`. Inspect the overlay at the requested OBS source dimensions. If a dependency installation is unnecessary or the user has prohibited it, use the existing dependencies.
 
-- `src/DonationWidget.jsx`: layout, RU/EN labels, QR and notification presentation; polling stays separate from rendering.
-- `src/App.css`: layout, colors, typography, theme accents, responsive behavior and reduced-motion support.
-- `src/utils/widget.js`: URL validation, receiving URL, exact formatting and event deduplication.
-- `test/widget.test.js`: precise amounts, URL fields, credential placement, deduplication and preview behavior.
-- `vite.config.js`: `/widget/` mount and operator-selected development API proxy.
-- `docs/HOSTING.md`: custom hosting with a narrow same-origin API proxy.
+## File map
 
-For an appearance request, edit rendering/styles and use synthetic data. Do not change account access, payment destinations or authentication as a side effect. Explain which visible settings changed and how the preview was checked.
+- `src/DonationWidget.jsx`: React layout, RU/EN copy, QR, alert rendering and polling.
+- `src/App.css`: layout, colors, typography, themes, responsive behavior and reduced motion.
+- `src/utils/widget.js`: settings validation, receiving URL, exact amounts and event deduplication.
+- `test/widget.test.js`: amount precision, URL fields, credential placement, deduplication and preview behavior.
+- `vite.config.js`: `/widget/` mount and development API proxy.
+- `docs/HOSTING.md`: custom hosting and the narrow same-origin API proxy.
+- `scripts/check-docs.mjs`: public documentation checks and local link validation.
 
-## Contracts that a design must preserve
+For visual requests, work on rendering and styles with sample data. Preserve other contributors' edits. Keep account access and payment destinations unchanged unless the user explicitly requests those changes.
 
-- This is an OBS **Browser source**, not a native plugin. Keep a transparent background unless the user requests otherwise.
-- Money from the API is an exact integer **string plus stored decimals**. Use `formatMinorUnits`. Never use Number/parseFloat or guess 18 decimals. Unknown precision must remain unknown.
-- The receiving QR includes recipient, currency, network and env. It must never contain the OBS token, session, private key or recovery phrase. Preserve the quiet zone and test scan readability after changing size/contrast.
-- Receiving identity comes from the authenticated backend. A caption is not a recipient selector.
-- The key is a restricted `obs` key issued in Heth. It exists only in the Browser-source URL fragment and the `x-api-key` request header. Do not move it to query parameters, storage, source, screenshots, fixtures, logs or reports.
-- The source reads only `/api/v1/obs/widget` and `/api/v1/obs/events`. It cannot read balances/full history, mutate permissions or send money.
-- Keep explicit test/prod selection, charged/incoming filtering, cursor pagination, ID deduplication, bounded queues, retry cleanup and revocation handling.
-- A transfer is not automatically an attributed author/platform donation. Do not invent donor names, messages or payment finality.
-- Widget appearance refreshes from Heth. A custom build can reinterpret its theme IDs; adding a new *server-stored* setting is a separate backend/MCP/API change, not a CSS-only feature.
+## Preserve the contract
 
-## Public repository hygiene
+- Use an OBS **Browser source** with a transparent background unless the user requests a different background.
+- Render money with `formatMinorUnits` using the API's exact integer string and recorded precision. Never use Number/parseFloat, guess precision, invent conversion rates or round nonzero amounts to zero.
+- Preserve the complete Heth-generated receiving URL and request parameters. Keep a high-contrast QR with a clear quiet zone. Verify readability after changing size or contrast.
+- Obtain the receiving identity from the authenticated backend. A caption never selects an account or changes a payment destination.
+- Use the separate `obs` key created in Heth. Keep its complete value in the connection fragment, request header and necessary runtime memory only. Do not persist it, put it into query parameters or QR codes, or include it in source, screenshots, fixtures or logs.
+- The widget reads only `/api/v1/obs/widget` and `/api/v1/obs/events`. Preserve charged/incoming filtering, cursor pagination, deduplication, bounded queues, retry cleanup and revocation handling.
+- Treat event IDs as deduplication metadata, not labels for the viewer. Do not invent donor names, messages or transaction finality.
+- Saved appearance refreshes from Heth. Reuse existing theme identifiers for custom styling; new saved settings require a matching API contract.
 
-Never commit real keys or private Browser-source URLs, even to a branch. Examples must use preview mode or unmistakable synthetic values. Do not run real payment calls to validate a design. Keep private deployment workflows and server credentials outside this public repository. Changes by other contributors must be preserved.
+## Heth MCP and a coding assistant
 
-No deployment or release is implied by a passing local build. Report separately: source checks, browser preview, native OBS acceptance and production release status.
+`get_obs_widget` and `list_obs_events` read the limited OBS data. `update_obs_widget` changes caption, theme, suggested amount and language after confirmation in the AI client. Currency/network changes, access creation and revocation are handled in Heth. `prepare_obs_connection` supplies a Heth review link; it does not grant access. Keep MCP permissions separate from the OBS key and never return that key to the assistant.
+
+A coding assistant can edit and build the fork using preview. Hosting and access to a fork are separate from Heth MCP. Ask the user to add their private OBS URL directly in OBS after the layout is ready.
+
+## Documentation and public files
+
+Write public guides for available Heth behavior and concrete setup steps. Keep internal workflow progress, roadmap promises and service operating modes out of documentation, examples and generated public files. Preserve the credential-free layout preview and ordinary automated checks.
+
+Never commit account keys, private Browser-source URLs, signing material or private deployment configuration. Use unmistakable sample data and do not initiate payments to check a design. Report checks actually performed to the user; do not turn assumptions into claims about a working deployment.
