@@ -1,6 +1,6 @@
 # Working on the Heth OBS widget with an AI assistant
 
-This repository contains the browser overlay, not the wallet, payment backend or MCP server. A user can change its layout freely in a fork and host their own build. Ordinary Heth account settings can also be changed through Heth MCP after that service is released; MCP does not edit this repository or deploy custom code.
+This repository contains the browser overlay, not the wallet, payment backend or MCP server. A user can change its layout freely in a fork and host their own build. Ordinary Heth account settings can also be changed through Heth MCP; MCP does not edit this repository or deploy custom code.
 
 ## Start here
 
