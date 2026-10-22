@@ -1,6 +1,6 @@
 # What you can customize
 
-Heth offers ordinary account settings for the caption, existing theme, language, currency/network and optional suggested amount after the updated connection flow is released. Those settings require no access to source code. Heth MCP can manage the same supported appearance fields with user approval in the AI client; separate account access is approved in Heth.
+Heth offers ordinary account settings for the caption, existing theme, language, currency/network and optional suggested amount. Those settings require no access to source code. Heth MCP can manage the same supported appearance fields with user approval in the AI client; separate account access is approved in Heth.
 
 For a completely custom layout, use a fork of this frontend. You can change the HTML/React structure, CSS, colors, spacing, fonts, animation and notification presentation. Public source does not give you access to anybody else's Heth account.
 

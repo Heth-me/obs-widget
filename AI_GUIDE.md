@@ -16,7 +16,7 @@ You do not need to be a developer to describe a design, but a custom build still
 
 > Read AGENTS.md. Make a 900 × 500 overlay for a dark gaming stream. Place the receiving QR on the left and three compact incoming-payment alerts on the right. Use a transparent background and lime accents. Keep the QR high contrast, preserve exact amounts and show the result in English preview mode. Run tests, lint and build. Do not use real credentials.
 
-> Прочитай AGENTS.md. Сделай компактную вертикальную вёрстку для источника OBS шириной 320 пикселей: QR сверху, уведомления ниже, белый текст и фиолетовые акценты. Используй русский предпросмотр. Не меняй получателя, валюту, сеть, контур и логику доступа. Покажи результат и проверь сборку.
+> Прочитай AGENTS.md. Сделай компактную вертикальную вёрстку для источника OBS шириной 320 пикселей: QR сверху, уведомления ниже, белый текст и фиолетовые акценты. Используй русский предпросмотр. Не меняй получателя, валюту, сеть и логику доступа. Покажи результат и проверь сборку.
 
 > Add a custom presentation for the existing `minimal` theme: large amount text, rounded alert cards and no entrance animation. Do not create a new backend theme identifier. Use synthetic events containing 1.250001 USDT and 0.000000000000000001 ETH to check precision and wrapping.
 
@@ -32,4 +32,4 @@ A donor name/message, custom sound, external image feed or arbitrary new account
 
 ## Before you use the build
 
-Check the preview in your actual OBS scene. Scan the *live receiving QR* only after connecting the real account yourself, and review its recipient, currency, network, env and suggested amount in Heth before accepting any payment. Preview QR codes deliberately cannot initiate a payment. Receipt must still be verified in Heth history.
+Check the preview in your actual OBS scene. Scan the *live receiving QR* only after connecting the real account yourself, and review its recipient, currency, network and suggested amount in Heth before accepting any payment. Preview QR codes deliberately cannot initiate a payment. Receipt must still be verified in Heth history.
