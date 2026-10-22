@@ -42,6 +42,15 @@ Pure tests cover precision, URL fields, validation, duplicates and non-payment p
 
 No source access is needed for the supported Heth appearance settings. For arbitrary layouts, modify and host a fork of this frontend. Start with [AI_GUIDE.md](AI_GUIDE.md), [AGENTS.md](AGENTS.md), [customization](docs/CUSTOMIZATION.md) and [custom hosting](docs/HOSTING.md). A coding assistant can work on preview data; it never needs your private OBS URL. The Heth MCP connection manages supported account settings and does not edit or deploy a fork. No built-in HTML/CSS editor is planned for this release.
 
+## Support
+
+If you find this widget useful, you can support its development through Heth:
+
+- [gavinrabor](https://app.heth.me/d/donate/@gavinrabor)
+- [spiridonovmv](https://app.heth.me/d/donate/@spiridonovmv)
+
+Donations are optional.
+
 ## License
 
 Source code is licensed under [MIT](LICENSE). Third-party dependencies retain their own licenses; bundled notices are in [THIRD_PARTY_NOTICES.txt](public/THIRD_PARTY_NOTICES.txt).
